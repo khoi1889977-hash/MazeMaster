@@ -1,29 +1,26 @@
 #include "raylib.h"
+#include <vector>
+#include "Entities/MazeGrid.h"
+
+using namespace std;
+
 
 int main() {
-    // 1. Khởi tạo cửa sổ 800x600, title "MazeMaster"
-    InitWindow(800, 600, "MazeMaster - Raylib");
-
-    // 2. Đặt FPS mục tiêu (60 frame/s)
+   
+    int height=10;
+    int width=10;
+    int cell_size=32;
+    InitWindow(height*cell_size,width*cell_size, "MazeMaster - Raylib");
+    vector<vector<Cell>> grid;
+    create_maze(grid,height,width);
     SetTargetFPS(60);
-
-    // 3. Vòng lặp chính: chạy tới khi người dùng đóng cửa sổ
-    while (!WindowShouldClose()) {
-        // 4. Bắt đầu vẽ frame mới
+    while(!WindowShouldClose()){
         BeginDrawing();
-
-        // 5. Xoá nền, tô màu (ở đây là DARKBLUE)
-        ClearBackground(DARKBLUE);
-
-        // 6. Vẽ chút text cho vui
-        DrawText("MazeMaster using raylib", 20, 20, 20, RAYWHITE);
-
-        // 7. Kết thúc vẽ, push frame lên màn hình
+        ClearBackground(BLUE);
+        draw_maze(grid,cell_size);
         EndDrawing();
+
     }
-
-    // 8. Đóng cửa sổ, giải phóng tài nguyên
     CloseWindow();
-
     return 0;
 }
