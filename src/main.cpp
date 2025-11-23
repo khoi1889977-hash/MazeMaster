@@ -1,19 +1,23 @@
 #include "raylib.h"
 #include <vector>
 #include "Entities/MazeGrid.h"
+#include <ctime>
+#include <cstdlib>
+
 
 using namespace std;
 
 
 int main() {
-   
-    int height=10;
-    int width=10;
+    srand((unsigned)time(nullptr));
+    int height=30;
+    int width=30;
     int cell_size=32;
     InitWindow(height*cell_size,width*cell_size, "MazeMaster - Raylib");
     vector<vector<Cell>> grid;
-    create_maze(grid,height,width);
+    generate_maze(grid,height,width,cell_size);
     SetTargetFPS(60);
+
     while(!WindowShouldClose()){
         BeginDrawing();
         ClearBackground(BLUE);
