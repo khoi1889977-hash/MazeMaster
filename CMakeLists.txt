@@ -26,7 +26,7 @@ file(GLOB_RECURSE SOURCES "src/*.cpp")
 add_executable(MazeMaster ${SOURCES})
 
 # 7. GẮN KẾT (Linking)
-# Lệnh này nói: "Hãy gắn động cơ Raylib vào cái xe MazeMaster của tôi"
+# Lệnh gắn Raylib vào MazeMaster
 target_link_libraries(MazeMaster PRIVATE raylib)
 
 
