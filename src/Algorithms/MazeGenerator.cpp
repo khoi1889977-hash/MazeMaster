@@ -3,7 +3,7 @@
 #include "Core/UI.h"
 #include <cstdlib>
 #include <algorithm>
-
+#include "raylib.h"
 
 using namespace std;
 
@@ -37,8 +37,8 @@ static bool check_cell(int x,int y,const std::vector<std::vector<cell>> &grid,in
 static void carve_maze(int x,int y,std::vector<std::vector<cell>> &grid,int height,int width,int cell_size){
     grid[y][x].is_block=false;
     grid[y][x].visited=true;
-    get_current_state(grid,cell_size);
-    WaitTime(DRAW_GEN_TIME);
+    // get_current_state(grid,cell_size);
+    // WaitTime(DRAW_GEN_TIME);
     int dirs[4]={0,1,2,3};//0 :lên
                           //1 Xuống
                           //2 Trái
@@ -72,6 +72,20 @@ static void carve_maze(int x,int y,std::vector<std::vector<cell>> &grid,int heig
     
 }
 
+void break_wall(std::vector<std::vector<cell>> &grid,int height,int width){
+    int total=(height*width)*1/100;
+    int i=0;
+    while(i<total){
+        int x = rand() % (width - 2) + 1;
+        int y = rand() % (height - 2) + 1;
+        if(grid[y][x].is_block){
+            if( !grid[y+1][x].is_block ||   !grid[y-1][x].is_block   ||!grid[y][x+1].is_block ||   !grid[y][x-1].is_block){
+                i++;
+                grid[y][x].is_block=false;
+            }
+        }
+    }
+}
 void generate_maze(std::vector<std::vector<cell>> &grid,int height,int width,int cell_size){
     create_maze(grid,height,width);
     carve_maze(1,1,grid,height,width,cell_size);
@@ -80,5 +94,6 @@ void generate_maze(std::vector<std::vector<cell>> &grid,int height,int width,int
             grid[i][j].visited=false;
         }
     }
+    break_wall(grid,height,width);
 }
 

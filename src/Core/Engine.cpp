@@ -7,7 +7,7 @@
 #include <cstdlib>
 using namespace std;
 
-engine::engine(int height ,int width):height(height),width(width),cell_size(0),is_running(true){}
+engine::engine(int height ,int width):height(height),width(width),cell_size(0),is_running(true),start_x(-1),start_y(-1),end_x(-1),end_y(-1){}
 
 void engine::generate_maze(){
     ::generate_maze(grid,height,width,cell_size);
@@ -22,9 +22,18 @@ void engine::init(){
 void engine::update(){
     if(IsKeyPressed(KEY_R)){
         generate_maze();
+        get_show_solution(false);
     }
     if(IsKeyPressed(KEY_S)){
+        get_show_solution(false);
         solve_maze();
+        get_show_solution(true
+        );
+    }
+    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)||IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)){
+        get_show_solution(false);
+        get_position(start_x,end_x,start_y,end_y,cell_size);
+        update_start_end(grid,start_x,start_y,end_x,end_y);
     }
 }
 

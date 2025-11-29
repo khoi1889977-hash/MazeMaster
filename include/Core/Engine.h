@@ -11,6 +11,10 @@ class engine{
     int cell_size;
     vector<vector<cell>> grid;
     bool is_running;
+    int start_x;
+    int end_x;
+    int start_y;
+    int end_y;
 
 
     public:
