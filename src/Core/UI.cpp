@@ -2,7 +2,8 @@
 #include "Entities/MazeGrid.h"
 #include "raylib.h"
 #include <iostream>
-
+#define RAYGUI_IMPLEMENTATION
+#include "raygui.h"
 bool show_solution=false;
 void set_show_solution(bool solution){
     show_solution=solution;
@@ -14,9 +15,6 @@ static Texture2D show_gen_step_off;
 
 static Texture2D generate;
 static Rectangle rect_generate{40,250,350,150};
-
-
-
 bool is_turn_on_draw_when_generate(){
     return TURN_ON_DRAW_WHEN_GENERATE;
 }
@@ -38,7 +36,7 @@ void change_algo_type_int_ui(int algo_type_int_ui){
 }
 
 static Texture2D solve;
-static Rectangle rect_solve{40,859,350,150};
+static Rectangle rect_solve{40,850,350,150};
 
 
 
@@ -48,6 +46,45 @@ bool is_turn_on_draw_when_solve(){
 double draw_solve_time(){
     return DRAW_SOLVE_TIME;
 }
+
+static int height_input=50;
+static int width_input=50;
+int get_width(){
+    return width_input;
+}
+int get_height(){
+    return height_input;
+}
+static bool edit_height_mode=false;
+static bool edit_width_mode=false;
+Rectangle rect_height{220,1050,150,100};
+Rectangle rect_width{220,1200,150,100};
+
+static bool is_show_help=false;
+static const char* help_text = 
+    "--- MOUSE CONTROLS ---\n"
+    "- Left Click : Set START Point (Green Cell)\n"
+    "- Right Click: Set END Point (Red Cell)\n\n"
+    
+    "--- SIDEBAR FUNCTIONS ---\n"
+    "- SHOW GEN STEP  : Toggle generation visualization \n"
+    "*It should be used in a maze with a height and width less than 70\n"
+    "- GENERATE       : Create a new random maze\n"
+    "- SHOW SOLVE STEP: Toggle solving visualization\n"
+    "- ALGO BUTTON    : Switch Algorithm (BFS -> DFS -> A*)\n"
+    "- SOLVE          : Start finding the path\n\n"
+
+    "--- MAP SETTINGS ---\n"
+    "- Height/Width   : Input map size (Min: 5, Max: 1000)\n"
+    "- Use Arrow buttons or type number directly\n"
+    "- Press Enter to confirm & restart\n\n"
+
+    "--- HOTKEYS ---\n"
+    "- R     : Reset / Generate new maze\n"
+    "- A : Solve maze use A*\n"
+    "- D : Solve maze use DFS*\n"
+    "- B : Solve maze use BFS\n";
+static Rectangle guide_window{ 500, 100, 1200, 1200 };
 
 
 
@@ -164,15 +201,19 @@ void get_position( int &start_x,int &end_x,int &start_y,int &end_y,const int &ce
     }
 }
 void setup_window(const int& height,const int& width,int& cell_size ){
-    if(height>width){
+    if(height>=width){
         cell_size=WINDOW_HEIGHT/height;
     }
     else{
         cell_size=WINDOW_WIDTH/width;
     }
+    std::cout << "chay lan 2 ne :";
     InitWindow(cell_size*width+SYSTEM_WIDTH,cell_size*height, "MazeMaster - Raylib");
 }
 void load_resource(){
+    GuiSetStyle(DEFAULT, TEXT_SIZE, 55);
+    GuiSetStyle(DEFAULT, TEXT_SPACING, 4);
+
     show_gen_step_on=LoadTexture("assets/show_gen_step_on.png");
     SetTextureFilter(show_gen_step_on, TEXTURE_FILTER_TRILINEAR);
     show_gen_step_off=LoadTexture("assets/show_gen_step_off.png");
@@ -252,7 +293,47 @@ void draw_slidebar(){
     Rectangle source_solve{0.0f,0.0f,(float)solve.width,(float)solve.height};
     DrawTexturePro(solve,source_solve,rect_solve,origin,0.0f,WHITE);
 
+    if(GuiSpinner(rect_height,"Height: ",&height_input,5,1000,edit_height_mode)){
+        edit_height_mode=!edit_height_mode;
+    }
+    if(GuiSpinner(rect_width,"Width: ",&width_input,5,1000,edit_width_mode)){
+        edit_width_mode=!edit_width_mode;
+    }
 }
+
+void draw_guide(){
+    Vector2 center{150,1350};
+    double radius=20.0;
+
+    bool is_hover = CheckCollisionPointCircle(GetMousePosition(),center,radius);
+    if(is_hover&&IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+        is_show_help=true;
+    }
+    DrawCircleV(center,radius,is_hover?SKYBLUE:DARKBLUE);
+    DrawText("?",(int)center.x-5,(int)center.y-10,20,WHITE);
+    int oldSize = GuiGetStyle(DEFAULT, TEXT_SIZE);
+    int oldSpacing = GuiGetStyle(DEFAULT, TEXT_LINE_SPACING);
+    GuiSetStyle(DEFAULT, TEXT_SIZE, 20);
+    GuiSetStyle(DEFAULT, TEXT_LINE_SPACING, 30);
+    GuiSetStyle(DEFAULT, TEXT_ALIGNMENT, TEXT_ALIGN_LEFT);
+
+    if(is_show_help){
+        int result = GuiMessageBox(
+            guide_window, 
+            "APP GUIDE",                      
+            help_text,                         
+            "OKEE,UNDERSTAND!"                     
+        );
+        if (result >= 0) {
+            is_show_help = false;
+        }
+    }
+    GuiSetStyle(DEFAULT, TEXT_SIZE, oldSize);
+    GuiSetStyle(DEFAULT, TEXT_LINE_SPACING, oldSpacing);
+    
+}
+
+
 
 void get_current_state(const std::vector<std::vector<cell>> &grid,int cell_size ){
     BeginDrawing();
@@ -262,6 +343,7 @@ void get_current_state(const std::vector<std::vector<cell>> &grid,int cell_size 
     if(show_solution){
         draw_solution_path(grid,cell_size);
     }
+    draw_guide();
     EndDrawing();
 }
 

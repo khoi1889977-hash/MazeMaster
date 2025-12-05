@@ -28,6 +28,10 @@ enum class user_action{
 };
 user_action handle_ui_input();
 
+int get_width();
+int get_height();
+
+
 static void draw_maze(const std::vector<std::vector<cell>> &grid,int cell_size);
 void setup_window(const int& height,const int& width,int& cell_size );
 void get_position( int &start_x,int &end_x,int &start_y,int &end_y,const int &cell_size);

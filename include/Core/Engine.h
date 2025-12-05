@@ -17,10 +17,10 @@ class engine{
     int end_x;
     int start_y;
     int end_y;
-
+    bool turn_on;
 
     public:
-    engine(int height , int width);
+    engine();
     void run();
 
     private:

@@ -5,11 +5,21 @@
 #include "raylib.h"
 #include <ctime>
 #include <cstdlib>
+#include <iostream>
 using namespace std;
 
-engine::engine(int height ,int width):height(height),width(width),cell_size(0),is_running(true),start_x(-1),start_y(-1),end_x(-1),end_y(-1){}
+engine::engine():height(50),width(50),cell_size(0),is_running(true),start_x(-1),start_y(-1),end_x(-1),end_y(-1){}
 
 void engine::generate_maze(){
+    height=get_height();
+    width=get_width();
+    if(height>=width){
+        cell_size=WINDOW_HEIGHT/height;
+    }
+    else{
+        cell_size=WINDOW_WIDTH/width;
+    }
+    // cout << "da doi cell_size thanh:"<<cell_size<<" SL:"<<cell_size*height<<endl;
     ::generate_maze(grid,height,width,cell_size);
 }
 algo algo_type=algo::BFS;

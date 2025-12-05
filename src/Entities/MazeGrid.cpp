@@ -9,7 +9,9 @@ void create_maze(std::vector<std::vector<cell>> &grid,const int &height,int cons
     reset_maze(grid,height,width);
 }
 void update_start_end(std::vector<std::vector<cell>> &grid,const int &start_x,const int &start_y,const int &end_x,const int  &end_y){
-    if(start_x>=0&&start_y>=0){
+    int h = grid.size();
+    int w = (h > 0) ? grid[0].size() : 0;
+    if(start_x >= 0 && start_x < w && start_y >= 0 && start_y < h){
     if(!grid[start_y][start_x].is_block){
         for(auto &i:grid){
             for(auto &j:i){
@@ -19,7 +21,7 @@ void update_start_end(std::vector<std::vector<cell>> &grid,const int &start_x,co
         grid[start_y][start_x].is_start=true;
         
     }}
-    if(end_x>=0&&end_y>=0){
+    if(end_x >= 0 && end_x < w && end_y >= 0 && end_y < h){
     if(!grid[end_y][end_x].is_block){
         for(auto &i:grid){
             for(auto &j:i){

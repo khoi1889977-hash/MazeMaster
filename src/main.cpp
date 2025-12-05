@@ -4,7 +4,7 @@ using namespace std;
 
 
 int main() {
-    engine app(150,150);
+    engine app;
     app.run();
     return 0;
 }

@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.14) # FetchContent cần bản 3.14 trở lên
 
 # 1. Thông tin dự án
 project(MazeMaster VERSION 1.0.0 LANGUAGES CXX)
+add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
 
 # 2. Chuẩn C++ 17
 set(CMAKE_CXX_STANDARD 17)
@@ -12,7 +13,7 @@ include(FetchContent)
 FetchContent_Declare(
   raylib
   GIT_REPOSITORY https://github.com/raysan5/raylib.git
-  GIT_TAG        5.0
+  GIT_TAG        master
 )
 FetchContent_MakeAvailable(raylib)
 
@@ -37,3 +38,10 @@ target_link_libraries(MazeMaster PRIVATE raylib)
 
 # 8. Copy tài nguyên (Hình ảnh/Font) ra thư mục chạy
 file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
+
+add_custom_command(TARGET MazeMaster POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${CMAKE_SOURCE_DIR}/assets"
+    "$<TARGET_FILE_DIR:MazeMaster>/assets"
+    COMMENT "Dang copy assets vao thu muc chay..."
+)
