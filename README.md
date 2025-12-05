@@ -58,8 +58,9 @@ cmake .. -DCMAKE_BUILD_TYPE=Release
 # 4. Build
 cmake --build . --config Release
 
+```
 
-###🧩 Project Structure
+### 🧩 Project Structure
 -src/Core/: Engine logic, Game Loop, and Window management.
 
 -src/Entities/: Grid data structure and Cell logic.
@@ -68,4 +69,4 @@ cmake --build . --config Release
 
 -assets/: UI textures and resources.
 
-###Made with ❤️ by [Trần Huỳnh Minh Khôi]
+### Made with ❤️ by [Trần Huỳnh Minh Khôi]
